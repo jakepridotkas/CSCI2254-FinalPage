@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Entry Results!</title>
+	<style>
+    </style>
+</head>
+<body>
+<?php
+	print "<h1>Entry Results...</h1><br>\n";
+?>
+	<fieldset>
+		<legend><b>Database Entry Results!</b></legend>
+<?php
+	$url = 'http://cscilab.bc.edu/~pridotka/project/workouts.php';
+
+	if(isset($_POST['email'])){
+		handle_new_password();   // If new password button is clicked
+	}
+?>
+
+</body>
+
+</html>
+
+<?php
+
+//___________________________ New Password ___________________________
+
+function handle_new_password() {
+	$new = createpw();
+	$db = connectToDB("pridotka");
+	$email = $_POST['email'];
+	$query = "UPDATE WorkoutUsers
+			  SET password = sha1('$new')
+  		      WHERE email = '$email'";  //Update Password with newly created PW query
+	performQuery($db, $query);
+
+	//Mail New Password
+	$to= $email;
+	$subject='New Password from Workouts';
+	$body='Here is your new Password:
+	' .
+	 $new .
+	'
+	Thank you,
+	Sincerely,
+	Admin';
+	$headers = 'From: Workouts Admin';
+
+	if ( mail($to, $subject, $body, $headers) )
+		echo " Mail was sent $to, $subject, $body, $headers ";
+	else
+		echo " Mail was NOT sent ";
+}
+
+
+
+//______________________ DB CONNECT FUNCTIONS ________________________________________
+function connectToDB($dbname){
+	$dbc= @mysqli_connect("localhost", "pridotka", "2SSMncyC", $dbname) or //password = zr6eRbCP or 2SSMncyC
+					die("Connect failed: ". mysqli_connect_error());
+	return $dbc;
+}
+function disconnectFromDB($dbc, $result){
+	mysqli_free_result($result);
+	mysqli_close($dbc);
+}
+
+function performQuery($dbc, $query){
+	echo "My query is >$query< <br>";
+	$result = mysqli_query($dbc, $query) or die("bad query".mysqli_error($dbc));
+	return $result;
+}
+
+function createpw( $len = 8 ){
+	$passwd = "";
+	$options = "abcdefghijklmnopqrstuvwxyz0123456789";
+	//$len = 8;
+	for ( $i = 1; $i <= $len; $i++ ) {
+		$pick = rand(0, strlen($options)-1);
+		$passchar = substr($options, $pick, 1);
+		$passwd.=$passchar;
+	}
+	return $passwd;
+	}
+
+?>
