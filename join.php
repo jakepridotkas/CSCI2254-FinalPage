@@ -1,10 +1,12 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Join Workouts</title>
-  <style>
-  <link rel="stylesheet" href="css/base.css" />
-  </style>
+	<link rel="stylesheet" href="finalProject.css" />
 
   <script type="text/javascript">
 
@@ -70,35 +72,63 @@
 
   function displayJoinForm(){
   ?>
-  <fieldset>
-  		<legend>Provide Your Information Below!</legend>
+  <fieldset class="signUp">
   		<form method = "post" name= "myForm" action= "Join_Action.php" onsubmit="return validateForm();">
-  			<label>What is your current fitness level?...</label> <br>
-  			<select name="level" size="3" required>
+  			<div id='joinHeader'><h2>Join The Club</h2></div>
+  			<div><h3>Basic Information</h3>
+  		    Name: <input type= "text" name="myname" id="myname" required/>
+  			<br>Email: <input type= "text" name="email" required/>
+  			<br>Confirm Email: <input type= "text" name="confirmemail" required/>
+  			<br>Password: <input type= "password" name="password" required/>
+  			<br>Confirm Password: <input type= "password" name="confirmpassword" required/>
+  			<br><label>What is your current fitness level?...</label> <br>
+  			<select name="level" size="1" required>
   						<option value="beginner">Beginner</option>
   						<option value="intermediate">Intermediate</option>
   						<option value="expert">Master</option>
 			</select>
-  			<br><br>
-
-  			<label>What is your Gender?...</label> <br>
-			  		<select name="gender" size="2" required>
+  			<br><label>What is your Gender?...</label> <br>
+			  		<select name="gender" size="1" required>
 			  						<option value="M">Male</option>
 			  						<option value="F">Female</option>
 				</select>
-			<br><br>
-
-  			<br>Name: <input type= "text" name="myname" id="myname" required/>
-
-  			<br>Email: <input type= "text" name="email" required/>
-  			<br>Confirm Email: <input type= "text" name="confirmemail" required/>
-  			<br>
-  			<br>Password: <input type= "password" name="password" required/>
-  			<br>Confirm Password: <input type= "password" name="confirmpassword" required/>
-
-  			<br><br>
-  			<input type= "reset" name="mybutton2" value= "Clear Information" /> <br>
-  			<input type= "submit" name="mybutton" value= "Join!"/>
+			<br>
+			<br>
+		    </div>
+  			<div>
+			<br><h3>Select an Avatar:</h3>
+			    <table>
+					<tr>
+					  <td><input type="radio" name="avatar" value="popeye.jpg"><img id="avatar" src="avatars/popeye.jpg" alt="popeye" width=75 height=75/></td>
+					  <td><input type="radio" name="avatar" value="cartoonArm.jpg"><img id="avatar" src="avatars/cartoonArm.jpg" alt="cartoonArm" width=75 height=75/></td>
+					  <td><input type="radio" name="avatar" value="larryLobster.jpg"><img id="avatar" src="avatars/larryLobster.jpg" alt="larryLobster" width=75 height=75/></td>
+					</tr>
+					<tr>
+					  <td><input type="radio" name="avatar" value="jackedGuy.jpg"><img id="avatar" src="avatars/jackedGuy.jpg" alt="jackedGuy" width=75 height=75/></td>
+					  <td><input type="radio" name="avatar" value="shadowLift.jpg"><img id="avatar" src="avatars/shadowLift.jpg" alt="shadowLift" width=75 height=75/></td>
+					  <td><input type="radio" name="avatar" value="struggleGuy.jpg"><img id="avatar" src="avatars/struggleGuy.jpg" alt="struggleGuy" width=75 height=75/></td>
+					</tr>
+					<tr>
+					  <td><input  type="radio" name="avatar" value="runningHeart.jpg"><img id="avatar" src="avatars/runningHeart.jpg" alt="runningHeart" width=75 height=75/></td>
+					  <td><input  type="radio" name="avatar" value="liftingSanta.jpg"><img id="avatar" src="avatars/liftingSanta.jpg" alt="liftingSanta" width=75 height=75/></td>
+					  <td><input  type="radio" name="avatar" value="treadmillGuy.jpg"><img id="avatar" src="avatars/treadmillGuy.jpg" alt="treadmillGuy" width=75 height=75/></td>
+					</tr>
+				 </table>
+			
+		    <!--Avatar image sources
+		      lobster: shpdoinkle.tumblr.com
+		      cartoon arm: cliparts.co
+		      popeye: cartoonsimages.com
+		      jacked guy: pixshark.com
+		      shadow lift: cliparts.co 
+		      struggle guy: motor-kid.com
+		      running heart: sites.google.com
+		      lifting santa: www.clipartbest.com
+		      treadmill guy: pixgood.com
+		      -->
+  			<br><br></div><br>
+  			<input type= "reset" name="mybutton2" value= "Clear Information" class="button" /> 
+  			<input type= "submit" name="mybutton" value= "Join!" class="button"/>
   		</form>
   	</fieldset>
   	<?php
