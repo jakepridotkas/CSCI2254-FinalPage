@@ -47,10 +47,10 @@ session_start();
    		$level = $row['membership_type'];
    		$avatar = $row['avatar'];
    		$gender = $row['gender'];
-   		echo "<img src='avatars/$avatar' alt='avatar' height='300px' width='300px'/>";
+   		echo "<img src='avatars/$avatar' alt='avatar' height='300' width='300' >";
    		displayWorkoutHistory();
    		echo "<table class='infoTable'>
-   		        <tr><td style='border:3px solid'>Your Bio</td><tr>
+   		        <tr><td style='border:3px solid'>Your Bio</td></tr>
    				<tr><td>Experience:$level</td></tr>
    				<tr><td>Gender:$gender</td></tr>
    				<tr><td>Score:$score</td></tr>
