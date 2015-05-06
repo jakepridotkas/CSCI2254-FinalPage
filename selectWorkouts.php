@@ -15,13 +15,14 @@ session_start();
 	<header>
 		<div class="navBar">
 			<ul>
-				<li class="home"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/profilePage.php">Home</a></li>
-				<li class="workoutPlanner"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php">Workout Planner</a></li>
-				<li><a href="http://cscilab.bc.edu/~mccormky/FinalProject/workoutArticles.php">Workout Articles</a></li>
-				<li><a href="http://cscilab.bc.edu/~pridotka/project/leaderboard.php">Leader Board</a></li>
-				<li><a href="http://cscilab.bc.edu/~pridotka/project/find_gym.php">Gyms Near You</a></li>
-
-				<li>Logged in As: <?php echo $_SESSION["UserName"] ?></a></li>
+				<li> <img src="workoutLogo.png" alt="logo" id="logo"/></li>
+  				<li class="home"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/profilePage.php">Home</a></li>
+  				<li class="workoutPlanner"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php">Workout Planner</a></li>
+  				<li><a href="http://cscilab.bc.edu/~mccormky/FinalProject/workoutArticles.php">Workout Articles</a></li>
+  				<li><a href="http://cscilab.bc.edu/~pridotka/project/leaderboard.php">Leader Board</a></li>
+  				<li><a href="http://cscilab.bc.edu/~pridotka/project/find_gym.php">Gyms Near You</a></li>
+  				<li class="loggedIn" style="font-size:10pt">Logged in As: <?php echo $_SESSION["UserName"] ?></li>
+  				<li><a style="font-size:10pt" href="http://cscilab.bc.edu/~pridotka/project/login.php">Log Out</a></li>
 			</ul>
 		</div>
 	</header>
@@ -199,7 +200,7 @@ function workout_homePage_HandleForm() {
 		<form action="Complete_Action.php" method="post">
 			<input type="hidden" name="time" value='<?php echo $Time ?>' />
 			<input type="hidden" name="muscles" value='<?php echo $muscles ?>' />
-			<input class='button' type='submit' value='I Completed This Workout' name='workoutCompleted'>
+			<p style='text-align: center'><input class='button' style='margin: 0 auto;' type='submit' value='I Completed This Workout' name='workoutCompleted'></p>
 		</form>
 		<?php
 
