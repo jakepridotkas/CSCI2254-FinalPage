@@ -13,11 +13,15 @@ session_start();
 <header>
 		<div class="navBar">
 			<ul>
-				<li class="home"><a href="http://cscilab.bc.edu/~pridotka/project/login.php">Login</a></li>
-				<li class="workoutPlanner"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php">Workout Planner</a></li>
-				<li><a href="http://cscilab.bc.edu/~mccormky/FinalProject/workoutArticles.php">Workout Articles</a></li>
-				<li><a href="http://cscilab.bc.edu/~pridotka/project/leaderboard.php">Leader Board</a></li>
-			</ul>
+				<li> <img src="workoutLogo.png" alt="logo" id="logo"/></li>
+  				<li class="home"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/profilePage.php">Home</a></li>
+  				<li class="workoutPlanner"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php">Workout Planner</a></li>
+  				<li><a href="http://cscilab.bc.edu/~mccormky/FinalProject/workoutArticles.php">Workout Articles</a></li>
+  				<li><a href="http://cscilab.bc.edu/~pridotka/project/leaderboard.php">Leader Board</a></li>
+  				<li><a href="http://cscilab.bc.edu/~pridotka/project/find_gym.php">Gyms Near You</a></li>
+  				<li class="loggedIn" style="font-size:10pt">Logged in As: <?php echo $_SESSION["UserName"] ?></li>
+  				<li><a style="font-size:10pt" href="http://cscilab.bc.edu/~pridotka/project/login.php">Log Out</a></li>
+  			</ul>
 		</div>
 	</header>
 <?php
@@ -37,7 +41,7 @@ if(isset($_POST["workoutCompleted"])){
 				$Time = $_POST['time'];
 				$name = $_SESSION["UserName"];
 				printf("<fieldset>
-						<h3><b>Your Results!</b></h3>
+						<h2><b>Your Results!</b></h2>
 						For completing a $Time minute workout, you have recieved $Time points! <br><br>");
 				printf("Go to the leaderboard page to see your updated score! </fieldset>");
 
