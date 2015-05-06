@@ -1,3 +1,7 @@
+<?php
+session_start()
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,17 +28,22 @@
 			$Password = $_POST['password'];
 			$dbname = connectToDB("pridotka");
 
-			$result = mysql_query("SELECT * FROM WorkoutUsers WHERE name='$Name' and password=sha1('$Password')");
-
-			if( $result )	{
-				  echo "<script>window.location = 'http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php'</script>";//send to Workouts Main Page
- 				  exit();
+			$query = "SELECT * FROM WorkoutUsers WHERE name='$Name' and password=sha1('$Password')";
+			$result = performQuery($dbname, $query);
+			//$check = mysql_num_rows($result);
+			if( mysqli_num_rows($result)==0  ) {
+				  $message = "User Does Not Exist.  Please Double Check Your UserName and Password";
+				  echo "<script type='text/javascript'>alert('$message');</script>";
+				  echo "<script>window.location = 'http://cscilab.bc.edu/~pridotka/project/login.php'</script>";//send to Login Page
+				  exit();
 			} else {
-			 	$message = "User Does Not Exist.  Please Double Check Your UserName and Password";
-				echo "<script type='text/javascript'>alert('$message');</script>";
-				echo "<script>window.location = 'http://cscilab.bc.edu/~pridotka/project/login.php'</script>";//send to Login Page
-				exit();
+				  $message = "Welcome Back $Name!";
+				  $_SESSION["UserName"] = $_POST['username'];
+				  $_SESSION["Count"] = "0";
 
+				  echo "<script type='text/javascript'>alert('$message');</script>";
+				  echo "<script>window.location = 'http://cscilab.bc.edu/~mccormky/FinalProject/profilePage.php'</script>";//send to Workouts Main Page
+ 				  exit();
 			}
 
 		}
@@ -51,7 +60,7 @@ function disconnectFromDB($dbc, $result){
 }
 
 function performQuery($dbc, $query){
-	echo "My query is >$query< <br>";
+	//echo "My query is >$query< <br>";
 	$result = mysqli_query($dbc, $query) or die("bad query".mysqli_error($dbc));
 	return $result;
 }
