@@ -22,9 +22,10 @@ session_start();
 	</header>
 <?php
 if(isset($_POST["workoutCompleted"])){
-		handle_points();   // If join button is clicked
+		handle_points();   
+		log_Workout();
 	}
-	//_____________________________HANDLE JOIN_______________________________________________________
+	//_____________________________HANDLE Points_______________________________________________________
 	function handle_points(){
 			if ( $_SESSION["Count"] == "1" ) {
 				$message = "You aint that swole!  Login again later to complete another workout...";
@@ -36,7 +37,7 @@ if(isset($_POST["workoutCompleted"])){
 				$Time = $_POST['time'];
 				$name = $_SESSION["UserName"];
 				printf("<fieldset>
-						<legend><b>Your Results!</b></legend>
+						<h3><b>Your Results!</b></h3>
 						For completing a $Time minute workout, you have recieved $Time points! <br><br>");
 				printf("Go to the leaderboard page to see your updated score! </fieldset>");
 
@@ -45,6 +46,16 @@ if(isset($_POST["workoutCompleted"])){
 				performQuery($dbname, $query);
 			}
 			}
+	//_____________________________Log Workout_______________________________________________________		
+	function log_Workout(){
+			$Time = $_POST['time'];
+			$name = $_SESSION["UserName"];
+			$muscles = $_POST['muscles'];
+			$dbname = connectToOtherDB("mccormky");
+			$query = "INSERT INTO loggedWorkouts VALUES('$name','$Time',now(),'$muscles')";
+			performOtherQuery($dbname, $query);
+	
+	}
 //______________________ DB CONNECT FUNCTIONS ________________________________________
 function connectToDB($dbname){
 	$dbc= @mysqli_connect("localhost", "pridotka", "2SSMncyC", $dbname) or //password = zr6eRbCP or 2SSMncyC
@@ -62,6 +73,27 @@ function performQuery($dbc, $query){
 }
 	//_____________________________________________________________________________________
 	?>
+
+<?php
+//______________________ DB Second CONNECT FUNCTIONS ________________________________________
+function connectToOtherDB($dbname){
+	$dbc= @mysqli_connect("localhost", "mccormky", "JawdGyVt", $dbname) or //password = zr6eRbCP or 2SSMncyC
+					die("Connect failed: ". mysqli_connect_error());
+	return $dbc;
+}
+function disconnectFromOtherDB($dbc, $result){
+	mysqli_free_result($result);
+	mysqli_close($dbc);
+}
+function performOtherQuery($dbc, $query){
+	//echo "My query is >$query< <br>";
+	$result = mysqli_query($dbc, $query) or die("bad query".mysqli_error($dbc));
+	return $result;
+}
+	//_____________________________________________________________________________________
+	?>
+
+
 
 </body>
 
