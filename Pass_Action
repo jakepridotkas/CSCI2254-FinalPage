@@ -1,21 +1,21 @@
+<?php
+	session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>Entry Results!</title>
-	<style>
-    </style>
+	<title>New Email...</title>
+	<link rel="stylesheet" href="finalProject.css" />
 </head>
 <body>
+
 <?php
-	print "<h1>Entry Results...</h1><br>\n";
-?>
-	<fieldset>
-		<legend><b>Database Entry Results!</b></legend>
-<?php
-	$url = 'http://cscilab.bc.edu/~pridotka/project/workouts.php';
+	//$url = 'http://cscilab.bc.edu/~pridotka/project/workouts.php';
 
 	if(isset($_POST['email'])){
+
 		handle_new_password();   // If new password button is clicked
 	}
 ?>
@@ -32,27 +32,40 @@ function handle_new_password() {
 	$new = createpw();
 	$db = connectToDB("pridotka");
 	$email = $_POST['email'];
-	$query = "UPDATE WorkoutUsers
+
+	$query = "SELECT * FROM WorkoutUsers WHERE email='$email'";
+	$result = performQuery($db, $query);
+
+	if( mysqli_num_rows($result)==0 )	{
+		$message = "Sorry, that Email Address does not exist in our database...";
+		echo "<script type='text/javascript'>alert('$message');</script>";
+		echo "<script>window.location = 'http://cscilab.bc.edu/~pridotka/project/newPass.php';</script>";//send to Login Page
+		exit();
+	} else {
+		$query2 = "UPDATE WorkoutUsers
 			  SET password = sha1('$new')
   		      WHERE email = '$email'";  //Update Password with newly created PW query
-	performQuery($db, $query);
+		performQuery($db, $query2);
+					//Mail New Password
+		$to= $email;
+		$subject='New Password from Workouts';
+		$body='Here is your new Password:
+					' .
+		 	$new .
+					'
+					Thank you,
+					Sincerely,
+					Admin';
+		$headers = 'From: Workouts Admin';
+	 mail($to, $subject, $body, $headers);
 
-	//Mail New Password
-	$to= $email;
-	$subject='New Password from Workouts';
-	$body='Here is your new Password:
-	' .
-	 $new .
-	'
-	Thank you,
-	Sincerely,
-	Admin';
-	$headers = 'From: Workouts Admin';
 
-	if ( mail($to, $subject, $body, $headers) )
-		echo " Mail was sent $to, $subject, $body, $headers ";
-	else
-		echo " Mail was NOT sent ";
+	  $message = "Email successfully sent!";
+  	  echo "<script type='text/javascript'>alert('$message');</script>";
+	  echo "<script>window.location = 'http://cscilab.bc.edu/~pridotka/project/login.php'</script>";//send to Login Page
+	  exit();
+
+	}
 }
 
 
@@ -69,7 +82,7 @@ function disconnectFromDB($dbc, $result){
 }
 
 function performQuery($dbc, $query){
-	echo "My query is >$query< <br>";
+	//echo "My query is >$query< <br>";
 	$result = mysqli_query($dbc, $query) or die("bad query".mysqli_error($dbc));
 	return $result;
 }
