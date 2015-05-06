@@ -1,21 +1,27 @@
 <?php
-include ('dbconn.php');
+//include ('dbconn.php');
+session_start();
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
+	<title>Workout Planner</title>
 	<link rel="stylesheet" href="finalProject.css" />
 </head>
 <body>
 	<header>
 		<div class="navBar">
 			<ul>
-				<li class="home"><a href="http://cscilab.bc.edu/~pridotka/project/login.php">Login</a></li>
+				<li class="home"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/profilePage.php">Home</a></li>
 				<li class="workoutPlanner"><a href="http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php">Workout Planner</a></li>
 				<li><a href="http://cscilab.bc.edu/~mccormky/FinalProject/workoutArticles.php">Workout Articles</a></li>
-				<li><a href="link">Leader Board</a></li>
+				<li><a href="http://cscilab.bc.edu/~pridotka/project/leaderboard.php">Leader Board</a></li>
+				<li><a href="http://cscilab.bc.edu/~pridotka/project/find_gym.php">Gyms Near You</a></li>
+
+				<li>Logged in As: <?php echo $_SESSION["UserName"] ?></a></li>
 			</ul>
 		</div>
 	</header>
@@ -25,8 +31,8 @@ include ('dbconn.php');
 		workout_homePage_HandleForm();
 	} else {
 		workout_homePage_DisplayForm();
-	}	
-	
+	}
+
 ?>
 
 </body>
@@ -36,7 +42,7 @@ include ('dbconn.php');
 function workout_homePage_DisplayForm() {
 ?>	<fieldset>
 	<form method="get">
-		<label>Select What Muscles You Want to Build</label>
+		<label>Select Which Muscles You Want to Build</label>
 			<br><input type='checkbox' name='chest' value='chest' >Chest<br>
 		    <input type='checkbox' name='back' value='back' >Back<br>
 		    <input type='checkbox' name='arms' value='arms' >Arms<br>
@@ -59,7 +65,7 @@ function workout_homePage_DisplayForm() {
 function workout_homePage_HandleForm() {
 		//Find number of muscles selected
 		$count = 0;
-		
+
 		if (isset($_GET['chest'])) {
 			$count++;
 		}
@@ -76,99 +82,144 @@ function workout_homePage_HandleForm() {
 			$count++;
 		}
 		if ($count > 3) {
-			echo "Error: Only Three can be selected";
+			$message = "Please select a maximum of 3 Muscle Groups!";
+			echo "<script type='text/javascript'>alert('$message');</script>";
+			echo "<script>window.location = 'http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php'</script>";//send to Login Page
+			exit();
 		}
-		
+		if ($count == 0) {
+					$message = "Please select at least 1 Muscle Group!";
+					echo "<script type='text/javascript'>alert('$message');</script>";
+					echo "<script>window.location = 'http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php'</script>";//send to Login Page
+					exit();
+		}
 		//Get workout time for each muscle
+		$Time = $_GET['duration'];
+		$userName = $_SESSION["UserName"];
+		$muscles = "";
 		$workoutTime = round($_GET['duration'] / $count / 5);
 		$dbName = "mccormky";
 		$dbc = connectToDB($dbName);
-		
-	
+
+
 		if (isset($_GET['chest'])) {
-				$query = "Select * from Workouts where Muscle = 'chest' order by rand() limit $workoutTime";		
+		        $muscles = "Chest,";      
+				$query = "Select * from Workouts where Muscle = 'chest' order by rand() limit $workoutTime";
 				$result = performQuery($dbc,$query);
 				while ($row = mysqli_fetch_array($result)) {
 					echo"<table align='center'>";
 						echo"<tr>";
-							echo"<td colspan='2' class='workout'>$row[4]</td>";	
+							echo"<td colspan='2' class='workout'>$row[4]</td>";
 						echo"</tr>";
 						echo"<tr><td># of Sets:$row[5]</td><td rowspan='4'><img src='workout_imgs/Chest_Images/$row[7]' alt='$row[4]' height=150 width = 150 />
 									<img src='workout_imgs/Chest_Images/$row[8]' alt='$row[4]' height=150 width = 150 /></td></tr>
 							 <tr><td># of Reps:$row[6]</td></tr>
 							 <tr><td>Duration:$row[2] minutes</td></tr>
-							<tr><td>Rest Time:$row[3] seconds</td>";			
+							<tr><td>Rest Time:$row[3] seconds</td>";
 						echo"</tr>";
 					echo"</table>";
 				}
 		}
 		if (isset($_GET['back'])) {
+		        $muscles = $muscles . "Back" . ",";
 				$query = "Select * from Workouts where Muscle = 'back' order by rand() limit $workoutTime";
 				$result = performQuery($dbc,$query);
 				while ($row = mysqli_fetch_array($result)) {
 					echo"<table align='center'>";
 						echo"<tr>";
-							echo"<td colspan='2' class='workout'>$row[4]</td>";	
+							echo"<td colspan='2' class='workout'>$row[4]</td>";
 						echo"</tr>";
 						echo"<tr><td># of Sets:$row[5]</td><td rowspan='4'><img src='workout_imgs/Back_Images/$row[7]' alt='$row[4]' height=150 width = 150 />
 									<img src='workout_imgs/Back_Images/$row[8]' alt='$row[4]' height=150 width = 150 /></td></tr>
 							 <tr><td># of Reps:$row[6]</td></tr>
 							 <tr><td>Duration:$row[2] minutes</td></tr>
-							<tr><td>Rest Time:$row[3] seconds</td>";			
+							<tr><td>Rest Time:$row[3] seconds</td>";
 						echo"</tr>";
 					echo"</table>";
-				}	
+				}
 		}
 		if (isset($_GET['arms'])) {
+				$muscles = $muscles . "Arms" . ",";
 				$query = "Select * from Workouts where Muscle = 'arms' order by rand() limit $workoutTime";
 				$result = performQuery($dbc,$query);
 			while ($row = mysqli_fetch_array($result)) {
 					echo"<table align='center'>";
 						echo"<tr>";
-							echo"<td colspan='2' class='workout'>$row[4]</td>";	
+							echo"<td colspan='2' class='workout'>$row[4]</td>";
 						echo"</tr>";
 						echo"<tr><td># of Sets:$row[5]</td><td rowspan='4'><img src='workout_imgs/Arms_Images/$row[7]' alt='$row[4]' height=150 width = 150 />
 									<img src='workout_imgs/Arms_Images/$row[8]' alt='$row[4]' height=150 width = 150 /></td></tr>
 							 <tr><td># of Reps:$row[6]</td></tr>
 							 <tr><td>Duration:$row[2] minutes</td></tr>
-							<tr><td>Rest Time:$row[3] seconds</td>";			
+							<tr><td>Rest Time:$row[3] seconds</td>";
 						echo"</tr>";
 					echo"</table>";
-				}	
+				}
 		}
 		if (isset($_GET['abs'])) {
+				$muscles = $muscles . "Abs" . ",";
 				$query = "Select * from Workouts where Muscle = 'abs' order by rand() limit $workoutTime";
 				$result = performQuery($dbc,$query);
 				while ($row = mysqli_fetch_array($result)) {
 					echo"<table align='center'>";
 						echo"<tr>";
-							echo"<td colspan='2' class='workout'>$row[4]</td>";	
+							echo"<td colspan='2' class='workout'>$row[4]</td>";
 						echo"</tr>";
 						echo"<tr><td># of Sets:$row[5]</td><td rowspan='4'><img src='workout_imgs/Ab_Images/$row[7]' alt='$row[4]' height=150 width = 150 />
 									<img src='workout_imgs/Ab_Images/$row[8]' alt='$row[4]' height=150 width = 150 /></td></tr>
 							 <tr><td># of Reps:$row[6]</td></tr>
 							 <tr><td>Duration:$row[2] minutes</td></tr>
-							<tr><td>Rest Time:$row[3] seconds</td>";			
+							<tr><td>Rest Time:$row[3] seconds</td>";
 						echo"</tr>";
 					echo"</table>";
-				}	
+				}
 		}
 		if (isset($_GET['legs'])) {
-				$query = "Select * from Workouts where Muscle == 'legs' order by rand() limit $workoutTime";
+				$muscles = $muscles . "Legs" . ",";
+				$query = "Select * from Workouts where Muscle = 'legs' order by rand() limit $workoutTime";
 				$result = performQuery($dbc,$query);
 				while ($row = mysqli_fetch_array($result)) {
 					echo"<table align='center'>";
 						echo"<tr>";
-							echo"<td colspan='2' class='workout'>$row[4]</td>";	
+							echo"<td colspan='2' class='workout'>$row[4]</td>";
 						echo"</tr>";
 						echo"<tr><td># of Sets:$row[5]</td><td rowspan='4'><img src='workout_imgs/Leg_Images/$row[7]' alt='$row[4]' height=150 width = 150 />
 									<img src='workout_imgs/Leg_Images/$row[8]' alt='$row[4]' height=150 width = 150 /></td></tr>
 							 <tr><td># of Reps:$row[6]</td></tr>
 							 <tr><td>Duration:$row[2] minutes</td></tr>
-							<tr><td>Rest Time:$row[3] seconds</td>";			
+							<tr><td>Rest Time:$row[3] seconds</td>";
 						echo"</tr>";
 					echo"</table>";
-				}	
+				}
 		}
-}	
+		
+		   $muscles = rtrim($muscles, ",");
+	     
+		?>
+		<form action="Complete_Action.php" method="post">
+			<input type="hidden" name="time" value='<?php echo $Time ?>' />
+			<input type="hidden" name="muscles" value='<?php echo $muscles ?>' />
+			<input class='button' type='submit' value='I Completed This Workout' name='workoutCompleted'>
+		</form>
+		<?php
+
+}
+
+//______________________ DB CONNECT FUNCTIONS ________________________________________
+function connectToDB($dbname){
+	$dbc= @mysqli_connect("localhost", "mccormky", "JawdGyVt", $dbname) or //password = zr6eRbCP or 2SSMncyC
+					die("Connect failed: ". mysqli_connect_error());
+	return $dbc;
+}
+function disconnectFromDB($dbc, $result){
+	mysqli_free_result($result);
+	mysqli_close($dbc);
+}
+
+function performQuery($dbc, $query){
+	//echo "My query is >$query< <br>";
+	$result = mysqli_query($dbc, $query) or die("bad query".mysqli_error($dbc));
+	return $result;
+}
+
 ?>
