@@ -1,17 +1,16 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
 	<title>Entry Results!</title>
-	<style>
-    </style>
+	<link rel="stylesheet" href="finalProject.css" />
+
 </head>
 <body>
-<?php
-	print "<h1>Entry Results...</h1><br>\n";
-?>
-	<fieldset>
-		<legend><b>Database Entry Results!</b></legend>
+
 <?php
 
 	if(isset($_POST['mybutton'])){
@@ -28,29 +27,31 @@
 			$Email = $_POST['email'];
 			$Level = $_POST['level'];
 			$Password = $_POST['password'];
+			$avatar = $_POST['avatar'];
 			$dbname = connectToDB("pridotka");
 
+			$query = "SELECT * FROM WorkoutUsers WHERE name='$Name' OR email='$Email'";
+			$result = performQuery($dbname, $query);
 
+			if( mysqli_num_rows($result)==0 )	{
+				  $query = "INSERT INTO WorkoutUsers Values('$Name', '$Gender', '$Email', sha1('$Password'), now(), '$Level' , 0, '$avatar')";
+				  performQuery($dbname, $query);
+				  $_SESSION["UserName"] = $Name;
+				  $_SESSION["Count"] = "0";
 
-			$result = mysql_query("SELECT * FROM WorkoutUsers WHERE email='$Email'");
-			//$num_rows = mysql_num_rows($result);
+				  echo "<script>window.location = 'http://cscilab.bc.edu/~mccormky/FinalProject/profilePage.php'</script>";//send to Workouts Main Page
+				  exit();
+			} else {
+				  $message = "Sorry, that User Name or Email is already Taken!";
+				  echo "<script type='text/javascript'>alert('$message');</script>";
+				  echo "<script>window.location = 'http://cscilab.bc.edu/~pridotka/project/join.php'</script>";//send to Login Page
+ 				  exit();
 
-			if ($result == FALSE) {
-			   trigger_error('It exists.', E_USER_WARNING);  //fix this, alert that in database
-			   return false;
 			}
 
-			//check to see if email is new
-			//$test = "SELECT * FROM WorkoutUsers WHERE email='$Email'";
-			//performQuery($dbname, $test);
 
-			//if (mysqli_fetch_array($test, MYSQLI_ASSOC) == NULL){
-			//	print "<h1> Error: Email Already in Database!</h1>";
-			//} else {
-			$query = "INSERT INTO WorkoutUsers Values('$Name', '$Gender', '$Email', sha1('$Password'), now(), '$Level')";
-			performQuery($dbname, $query);
 
-			echo "<script>window.location = 'http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php'</script>";//send to Workouts Main Page
+			//echo "<script>window.location = 'http://cscilab.bc.edu/~mccormky/FinalProject/selectWorkouts.php'</script>";//send to Workouts Main Page
 			//}
 
 		}
@@ -67,7 +68,7 @@ function disconnectFromDB($dbc, $result){
 }
 
 function performQuery($dbc, $query){
-	echo "My query is >$query< <br>";
+	//echo "My query is >$query< <br>";
 	$result = mysqli_query($dbc, $query) or die("bad query".mysqli_error($dbc));
 	return $result;
 }
