@@ -1,5 +1,7 @@
 
 	
+
+	
 fieldset{background-color:cyan;}
 	
 table {
@@ -38,7 +40,7 @@ body {
   
 }
  
-a #logOut {
+#logOut {
   font-size: 8pt;
 } 
 .navBar a:hover {
@@ -132,6 +134,7 @@ td {
 
 .infoTable td {
    border: 0px;
+   font-size: 15pt;
 }
 
 body {
@@ -226,11 +229,12 @@ img.active {
 font-size:14pt;
 background:none;
 border:0;
-color:springgreen;
+color:black;
 }
 
 .links {
 	text-align: center;
+
 }
 
 .signUp {
@@ -301,14 +305,8 @@ div {
 	height:10px;
 }
 
+#odd {
 
+   background-color: cornflowerblue;
 
-
-
-
-
-
-
-
-
-
+}
