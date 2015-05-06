@@ -59,7 +59,7 @@ function workout_articles_DisplayForm() {
       		foreach ($items as $item) {
       			echo "<fieldset>";
       			echo "<div class='news'>
-      				<h2>$item->title<h2>\n";
+      				<h2>$item->title</h2>\n";
       	    	echo '<a href="' . $item->link . '">' . $item->title . '</a><br>';
         		echo $item->description . "<br><br>\n";
         		echo "<hr></div>";
